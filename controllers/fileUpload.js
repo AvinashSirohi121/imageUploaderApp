@@ -180,7 +180,7 @@ exports.videoUpload = async (req, res, next) => {
 
 exports.imageSizeReducer = async (req, res, next) => {
   try {
-    const { name, tags, email,quality } = req.body;
+    const { name, tags, email, quality } = req.body;
     console.log("Name =>", name, ", Tags =>", tags, ", Email =>", email);
     if (!name || !tags || !email) {
       return res.status(400).json({
@@ -214,7 +214,7 @@ exports.imageSizeReducer = async (req, res, next) => {
 
     const options = {
       folder: "imageUploaderApp",
-      transformation: [{fetch_format:'auto', quality:quality }], // 'auto:low' automatically adjusts the quality to a lower level. You can use a specific number too.
+      transformation: [{ fetch_format: "auto", quality: quality }], // 'auto:low' automatically adjusts the quality to a lower level. You can use a specific number too.
     };
     console.log("TempPath =>", file.tempFilePath, " Options =>", options);
     let imageResponse = await cloudinary.uploader.upload(
