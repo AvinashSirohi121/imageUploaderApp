@@ -105,7 +105,7 @@ npm start
 5. The application will be running on http://localhost:4000.
 
 # Author
-- developed by [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/avinashsirohi86)  Avinash Sirohi with love...❤️
+- developed by [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/avinashsirohi86/?originalSubdomain=in)  Avinash Sirohi with love...❤️
 
     
 
