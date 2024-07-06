@@ -50,7 +50,7 @@ exports.imageUpload = async (req, res, next) => {
     }
 
     // validation
-    const supportedType = ["jpeg", "jpg", "png"];
+    const supportedType = ["jpeg", "jpg", "png", "pdf", "docx"];
     const fileType = file.name.split(".").pop().toLowerCase();
     console.log("File Type =>", fileType);
     if (!isFileTypeSupported(fileType, supportedType)) {
@@ -63,13 +63,23 @@ exports.imageUpload = async (req, res, next) => {
 
     // upload to cloudinary
 
-    const options = { folder: "imageUploaderApp" };
-    console.log("TempPath =>", file.tempFilePath, " Options =>", options);
-    let imageResponse = await cloudinary.uploader.upload(
-      file.tempFilePath,
-      options
-    );
-    console.log("Response ->", imageResponse);
+    const options = {
+      public_id: "sample_document.docx",
+      resource_type: "auto",
+      raw_convert: "aspose",
+    };
+    let imageResponse;
+    try {
+      console.log("TempPath =>", file.tempFilePath, " Options =>", options);
+      imageResponse = await cloudinary.uploader.upload(
+        file.tempFilePath,
+        options
+      );
+      console.log("Response ->", imageResponse);
+    } catch (error) {
+      console.log("Error while uploading file =>", error);
+    }
+   
     // creating entry in DB
 
     const fileData = await File.create({
@@ -78,7 +88,7 @@ exports.imageUpload = async (req, res, next) => {
       email,
       imageUrl: imageResponse.secure_url,
     });
-    console.log("Data created in DB =>", fileData);
+    // console.log("Data created in DB =>", fileData);
     if (fileData) {
       return res.status(200).json({
         success: true,
@@ -96,6 +106,71 @@ exports.imageUpload = async (req, res, next) => {
     });
   }
 };
+
+// exports.imageUpload = async (req, res, next) => {
+//   try {
+//     const { name, tags, email } = req.body;
+//     if (!name || !tags || !email) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Please provide all details for Name, Tags, and Email",
+//       });
+//     }
+
+//     const file = req.files.file;
+//     console.log("File =>", file);
+//     if (!file) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "File is not available",
+//       });
+//     }
+
+//     // Validation
+//     const supportedTypes = ["jpeg", "jpg", "png", "pdf", "docx"];
+//     const fileType = file.name.split(".").pop().toLowerCase();
+//     if (!isFileTypeSupported(fileType, supportedTypes)) {
+//       return res.status(400).json({
+//         success: false,
+//         message:
+//           "File format is not supported. Supported types are jpeg, jpg, png, pdf, docx.",
+//       });
+//     }
+
+//     // Upload to Cloudinary
+//     const options = {
+//       folder: "imageUploaderApp",
+//       resource_type:"image"
+//     };
+//     const imageResponse = await cloudinary.uploader.upload(
+//       file.tempFilePath,
+//       options
+//     );
+//     console.log("Image Response =>", imageResponse);
+//     // Create entry in DB
+//     const fileData = await File.create({
+//       name,
+//       tags,
+//       email,
+//       imageUrl: imageResponse.secure_url,
+//     });
+
+//     if (fileData) {
+//       return res.status(200).json({
+//         success: true,
+//         message: "File Uploaded Successfully",
+//         data: fileData,
+//       });
+//     }
+//   } catch (error) {
+//     console.log("Error while imageUpload =>", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Unable to upload file",
+//       error: error.message,
+//     });
+//   }
+// };
 
 exports.videoUpload = async (req, res, next) => {
   try {
@@ -178,7 +253,7 @@ exports.videoUpload = async (req, res, next) => {
   }
 };
 
-exports.imageSizeReducer = async (req, res, next) => {
+exports.sizeReducer = async (req, res, next) => {
   try {
     const { name, tags, email, quality } = req.body;
     console.log("Name =>", name, ", Tags =>", tags, ", Email =>", email);
@@ -230,7 +305,7 @@ exports.imageSizeReducer = async (req, res, next) => {
       email,
       imageUrl: imageResponse.secure_url,
     });
-    console.log("Data created in DB =>", fileData);
+    // console.log("Data created in DB =>", fileData);
     if (fileData) {
       return res.status(200).json({
         success: true,
